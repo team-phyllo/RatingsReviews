@@ -15,7 +15,7 @@ app.get('/reviews', (req, res) => {
     })
     .catch(error => {
       console.log('errrrrrorrr');
-      res.status(500).send('error, cannot get reviews');
+      res.status(400).send('error, cannot get reviews');
     });
 });
 
@@ -26,38 +26,51 @@ app.get('/reviews/meta', (req, res) => {
       res.send(meta);
     })
     .catch(error => {
-      res.status(500).send('error, cannot get meta');
+      res.status(400).send('error, cannot get meta');
     });
 });
 
 //POST New review
 app.post('/reviews', (req, res) => {
   req.body = {
-
+    product_id: req.params.product_id,
+    rating: req.params.rating,
+    summary: req.params.summary,
+    body: req.params.body,
+    name: req.params.name,
+    email: req.params.email,
+    photos: req.params.photos,
+    characteristics: req.params.characterisitics
 
   }
   queries.postReview(req.body)
-    .then()
+    .then((res) => {
+      res.status(200).send('posted');
+    })
     .catch(error => {
-      res.status(500).send('error, cannot post review');
+      res.status(400).send('error, cannot post review');
     });
 });
 
 //PUT Helpfulness
-app.put(`/reviews/:review_id/helpful`, (req, res) => {
+app.put('/reviews/:review_id/helpful', (req, res) => {
   queries.putHelpfulness(req.params.review_id)
-    .then()
+    .then((res) => {
+      res.status(204).send('updated');
+    })
     .catch(error => {
-      res.status(500).send('error, cannot update helpfulness');
+      res.status(404).send('error, cannot update helpfulness');
     });
 });
 
 //PUT Reported
 app.put(`/reviews/:review_id/report`, (req, res) => {
   queries.putReported(req.params.review_id)
-    .then()
+    .then((res) => {
+      res.status(204).send('reported');
+    })
     .catch(error => {
-      res.status(500).send('error, cannot get flag review');
+      res.status(404).send('error, cannot get flag review');
     });
 });
 

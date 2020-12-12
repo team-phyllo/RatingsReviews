@@ -1,0 +1,37 @@
+config:
+  target: "http://localhost:3030"
+  phases:
+    - duration: 60
+      arrivalRate: 50
+      name: Warm up
+    - duration: 60
+      arrivalRate: 50
+      rampTo: 50
+      name: Ramp up load
+    - duration: 60
+      arrivalRate: 100
+      rampTo: 100
+      name: Sustained load
+
+scenarios:
+  # We define one scenario:
+  - name: "Get Reviews"
+    flow:
+      - get:
+          url: "/reviews/"
+          # The endpoint responds with JSON, which we parse and extract a field from
+          # to use in the next request:
+          json:
+            product_id: '{{ $randomNumber(1, 1000000) }}'
+  # put helpfulness:
+  # - name: "Put Helpfulness"
+  #   flow:
+  #     - put:
+  #         url: "/reviews/:{{ review_id }}/helpful"
+  #         json:
+  #           review_id: '{{ $randomNumber(1, 1000000) }}'
+  # # put report:
+  # - name: "Put Helpfulness"
+  #   flow:
+  #     - put:
+  #       url: "/reviews/:{{ $randomNumber(1, 1000000) }}/report"

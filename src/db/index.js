@@ -6,7 +6,7 @@ var db = pgp('postgres://postgres:password@localhost:5432/ratingsReviews');
 const retrieveReviews = async (prodId = 1, limit = 5) => {
   console.log('db line 8', prodId);
   try {
-    let res = await db.query(`SELECT * FROM reviews WHERE reviews.product_id = ${prodId} LIMIT ${limit}`)
+    let res = await db.query(`SELECT * FROM reviews WHERE reviews.product_id = $1 LIMIT $2`, [prodId, limit])
     // console.log('db line 11', res);
     return res;
   }
@@ -51,7 +51,7 @@ const postReview = async (review) => {
 //PUT helpfulness
 const putHelpfulness = async (review_id) => {
   try {
-    let res = await db.query(`UPDATE reviews SET helpfulness = helpfulness + 1 WHERE reviews.review_id = ${review_id}`);
+    let res = await db.query('UPDATE reviews SET helpfulness = helpfulness + 1 WHERE reviews.review_id = $1', review_id);
     return res;
   }
   catch (err) {
@@ -62,7 +62,7 @@ const putHelpfulness = async (review_id) => {
 //PUT report
 const putReported = async (review_id) => {
   try {
-    let res = await db.query(`UPDATE reviews SET reported = reported + 1 WHERE reviews.review_id = ${review_id}`);
+    let res = await db.query('UPDATE reviews SET reported = true WHERE reviews.review_id = $1', review_id);
     return res;
   }
   catch (err) {
